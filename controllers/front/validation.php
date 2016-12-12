@@ -36,9 +36,9 @@ class Oxipay_prestashopValidationModuleFrontController extends ModuleFrontContro
 	{
 	   $post = Tools::jsonEncode($_POST);
        $get = Tools::jsonEncode($_GET);
-	     file_put_contents(dirname(__FILE__).'/text.txt', time());
+	     /*file_put_contents(dirname(__FILE__).'/text.txt', time());
        file_put_contents(dirname(__FILE__).'/post.txt', $post);
-       file_put_contents(dirname(__FILE__).'/get.txt', $get);
+       file_put_contents(dirname(__FILE__).'/get.txt', $get);*/
        $query = array(
             'x_account_id'=>Tools::getValue('x_account_id'),
             'x_reference'=>Tools::getValue('x_reference'),
