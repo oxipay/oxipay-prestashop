@@ -3,7 +3,7 @@ branches:
     - master
 skip_tags: true
 environment:
-  release_name: "oxipay-prestashop_v%appveyor_build_version%.zip"
+  release_name: "oxipay_prestashop_v%appveyor_build_version%.zip"
 build_script:
   - ps: Invoke-Expression "7z a $env:release_name"
 artifacts:
