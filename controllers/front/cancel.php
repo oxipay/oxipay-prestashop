@@ -27,7 +27,7 @@
 /**
  * @since 1.5.0
  */
-class Oxipay_prestashopCancelModuleFrontController extends ModuleFrontController
+class OxipayprestashopCancelModuleFrontController extends ModuleFrontController
 {
 	/**
 	 * @see FrontController::postProcess()

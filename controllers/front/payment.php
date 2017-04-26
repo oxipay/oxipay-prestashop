@@ -27,7 +27,7 @@
 /**
  * @since 1.5.0
  */
-class Oxipay_prestashopPaymentModuleFrontController extends ModuleFrontController
+class OxipayprestashopPaymentModuleFrontController extends ModuleFrontController
 {
 	public $ssl = true;
 	public $display_column_left = false;
@@ -50,7 +50,7 @@ class Oxipay_prestashopPaymentModuleFrontController extends ModuleFrontControlle
             'x_account_id' => Configuration::get('OXIPAY_MERCHANT_ID'),
             'x_amount' => $cart->getOrderTotal(true, Cart::BOTH),
             'x_currency' => $this->context->currency->iso_code,
-            'x_url_callback' => $this->context->link->getModuleLink('oxipay_prestashop','validation'),
+            'x_url_callback' => $this->context->link->getModuleLink('oxipayprestashop','validation'),
             'x_url_complete' => $this->context->link->getPageLink('order-confirmation',null,null,array('id_cart'=>$cart->id,'id_module'=>$this->module->id,'key'=>$customer->secure_key)),
             'x_url_cancel' => $this->context->link->getPageLink('order', true, NULL, "step=3"),
             'x_test' => true,

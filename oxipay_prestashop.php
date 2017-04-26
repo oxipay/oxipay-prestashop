@@ -27,7 +27,7 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-class Oxipay_prestashop extends PaymentModule
+class Oxipayprestashop extends PaymentModule
 {
 	protected $_html = '';
 	protected $_postErrors = array();
@@ -38,7 +38,7 @@ class Oxipay_prestashop extends PaymentModule
 	public $extra_mail_vars;
 	public function __construct()
 	{
-		$this->name = 'oxipay_prestashop';
+		$this->name = 'oxipayprestashop';
 		$this->tab = 'payments_gateways';
 		$this->version = '1.1.0';
 		$this->author = 'PrestaShop';
@@ -232,9 +232,9 @@ class Oxipay_prestashop extends PaymentModule
             'x_account_id' => Configuration::get('OXIPAY_MERCHANT_ID'),
             'x_amount' => (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH), 2),
             'x_currency' => $this->context->currency->iso_code,
-            'x_url_callback' => $this->context->link->getModuleLink('oxipay_prestashop','validation',array('id_cart'=>$cart->id,'id_module'=>$this->id,'key'=>$customer->secure_key,'id_customer'=>$customer->id)),
-            'x_url_complete' => $this->context->link->getModuleLink('oxipay_prestashop','confirmation'),
-            'x_url_cancel' => $this->context->link->getModuleLink('oxipay_prestashop','cancel'),
+            'x_url_callback' => $this->context->link->getModuleLink('oxipayprestashop','validation',array('id_cart'=>$cart->id,'id_module'=>$this->id,'key'=>$customer->secure_key,'id_customer'=>$customer->id)),
+            'x_url_complete' => $this->context->link->getModuleLink('oxipayprestashop','confirmation'),
+            'x_url_cancel' => $this->context->link->getModuleLink('oxipayprestashop','cancel'),
             'x_test' => true,
             'x_shop_country' => 'AU',
             'x_shop_name' =>Configuration::get('PS_SHOP_NAME'), 

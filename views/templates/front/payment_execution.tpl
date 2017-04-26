@@ -24,20 +24,20 @@
 *}
 
 {capture name=path}
-	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}" title="{l s='Go back to the Checkout' mod='oxipay_prestashop'}">{l s='Checkout' mod='oxipay_prestashop'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Oxipay' mod='oxipay_prestashop'}
+	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}" title="{l s='Go back to the Checkout' mod='oxipayprestashop'}">{l s='Checkout' mod='oxipayprestashop'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Oxipay' mod='oxipayprestashop'}
 {/capture}
 
 {include file="$tpl_dir./breadcrumb.tpl"}
 
-<h2>{l s='Order summary' mod='oxipay_prestashop'}</h2>
+<h2>{l s='Order summary' mod='oxipayprestashop'}</h2>
 
 {assign var='current_step' value='payment'}
 {include file="$tpl_dir./order-steps.tpl"}
 
 {if $nbProducts <= 0}
-	<p class="warning ">{l s='Your shopping cart is empty.' mod='oxipay_prestashop'}</p>
+	<p class="warning ">{l s='Your shopping cart is empty.' mod='oxipayprestashop'}</p>
 {else}
-    {*<p class="warning alert alert-error">{l s='Orders from outside Australia are not supported by Oxipay. Please select a different payment option.' mod='oxipay_prestashop'}</p>*}
+    {*<p class="warning alert alert-error">{l s='Orders from outside Australia are not supported by Oxipay. Please select a different payment option.' mod='oxipayprestashop'}</p>*}
     {$form_query}        
     <p class="cart_navigation" id="cart_navigation">
     	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html'}" class="button_large">{l s='Other payment methods' mod='bankwire'}</a>

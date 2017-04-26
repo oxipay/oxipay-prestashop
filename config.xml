@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
-	<name>oxipay_prestashop</name>
+	<name>oxipayprestashop</name>
 	<displayName><![CDATA[Oxipay prestashop]]></displayName>
 	<version><![CDATA[1.1.0]]></version>
 	<description><![CDATA[Accept payments for your products via Oxipay.]]></description>
