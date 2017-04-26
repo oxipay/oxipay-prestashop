@@ -27,7 +27,7 @@
 /**
  * @since 1.5.0
  */
-class Oxipay_prestashopValidationModuleFrontController extends ModuleFrontController
+class OxipayprestashopValidationModuleFrontController extends ModuleFrontController
 {
 	/**
 	 * @see FrontController::postProcess()

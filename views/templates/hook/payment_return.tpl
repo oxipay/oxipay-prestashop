@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<p>{l s='Your order on %s is complete.' sprintf=$shop_name mod='oxipay_prestashop'}
-	<br /><br />{l s='If you have questions, comments or concerns, please contact our' mod='oxipay_prestashop'} <a href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='expert customer support team' mod='oxipay_prestashop'}</a>.
+<p>{l s='Your order on %s is complete.' sprintf=$shop_name mod='oxipayprestashop'}
+	<br /><br />{l s='If you have questions, comments or concerns, please contact our' mod='oxipayprestashop'} <a href="{$link->getPageLink('contact', true)|escape:'html'}">{l s='expert customer support team' mod='oxipayprestashop'}</a>.
 </p>
 
