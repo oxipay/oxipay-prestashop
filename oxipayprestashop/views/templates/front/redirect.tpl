@@ -1,5 +1,5 @@
 {*
-* 2007-2016 PrestaShop
+* 2007-2017 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -17,12 +17,15 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2016 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @author    PrestaShop SA <contact@prestashop.com>
+*  @copyright 2007-2017 PrestaShop SA
+*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+<div class="oxipaymodal">
+
+{* Check all this! *}
 {capture name=path}
 	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}" title="{l s='Go back to the Checkout' mod='oxipayprestashop'}">{l s='Checkout' mod='oxipayprestashop'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Oxipay' mod='oxipayprestashop'}
 {/capture}
@@ -44,7 +47,32 @@
     </p>
 {/if}
 <script type="text/javascript">
+$body = $("body");
 $(document).ready(function(){
+   $body.addClass("oxipayloading");
    $('#oxipayload').submit(); 
 });
 </script>
+
+{* Original code:
+<div>
+	<h3>{l s='Redirect your customer' mod='oxipayprestashop'}:</h3>
+	<ul class="alert alert-info">
+			<li>{l s='This action should be used to redirect your customer to the website of your payment processor' mod='oxipayprestashop'}.</li>
+	</ul>
+	
+	<div class="alert alert-warning">
+		{l s='You can redirect your customer with an error message' mod='oxipayprestashop'}:
+		<a href="{$link->getModuleLink('oxipayprestashop', 'redirect', ['action' => 'error'], true)|escape:'htmlall':'UTF-8'}" title="{l s='Look at the error' mod='oxipayprestashop'}">
+			<strong>{l s='Look at the error message' mod='oxipayprestashop'}</strong>
+		</a>
+	</div>
+	
+	<div class="alert alert-success">
+		{l s='You can also redirect your customer to the confirmation page' mod='oxipayprestashop'}:
+		<a href="{$link->getModuleLink('oxipayprestashop', 'confirmation', ['cart_id' => $cart_id, 'secure_key' => $secure_key], true)|escape:'htmlall':'UTF-8'}" title="{l s='Confirm' mod='oxipayprestashop'}">
+			<strong>{l s='Go to the confirmation page' mod='oxipayprestashop'}</strong>
+		</a>
+	</div>
+</div>
+*}

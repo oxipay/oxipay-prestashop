@@ -1,6 +1,6 @@
 <?php
-/*
-* 2007-2016 PrestaShop
+/**
+* 2007-2017 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,24 +18,22 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2016 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @author    PrestaShop SA <contact@prestashop.com>
+*  @copyright 2007-2017 PrestaShop SA
+*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 /**
- * @deprecated 1.5.0 This file is deprecated, use moduleFrontController instead
- */
+* In some cases you should not drop the tables.
+* Maybe the merchant will just try to reset the module
+* but does not want to loose all of the data associated to the module.
+*/
 
-/* SSL Management */
-$useSSL = true;
+$sql = array();
 
-require('../../config/config.inc.php');
-Tools::displayFileAsDeprecated();
-
-// init front controller in order to use Tools::redirect
-$controller = new FrontController();
-$controller->init();
-
-Tools::redirect(Context::getContext()->link->getModuleLink('bankwire', 'payment'));
+foreach ($sql as $query) {
+    if (Db::getInstance()->execute($query) == false) {
+        return false;
+    }
+}
