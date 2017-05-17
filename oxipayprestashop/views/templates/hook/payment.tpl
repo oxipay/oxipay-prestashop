@@ -25,10 +25,10 @@
 <div class="row">
 	<div class="col-xs-12">
 		<p class="payment_module" id="oxipayprestashop_payment_button">
-			{if $cart->getOrderTotal() < 20}
+			{if $oxipay_validation_errors }
 				<a href="">
 					<img src="{$this_path_ssl}images/{if $oxipay_logo}{$oxipay_logo}{else}oxipay.png{/if}" style="width: 120px;margin-right: 10px;" alt="{l s='Pay with my payment module' mod='oxipayprestashop'}" />
-					{l s='Minimum amount required in order to pay with my payment module:' mod='oxipayprestashop'} {convertPrice price=20}
+					{$oxipay_validation_errors}
 				</a>
 			{else}
 				<a href="{$link->getModuleLink('oxipayprestashop', 'redirect', array(), true)|escape:'htmlall':'UTF-8'}" title="{l s='Pay with my payment module' mod='oxipayprestashop'}">

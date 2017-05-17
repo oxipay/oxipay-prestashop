@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-include(dirname(__FILE__).'/../../common/OxipayCommon.php');
+require_once(dirname(__FILE__).'/../../common/OxipayCommon.php');
 
 
 class OxipayprestashopConfirmationModuleFrontController extends ModuleFrontController

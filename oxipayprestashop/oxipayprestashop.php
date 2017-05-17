@@ -28,6 +28,8 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+require_once(dirname(__FILE__).'/common/OxipayCommon.php');
+
 class Oxipayprestashop extends PaymentModule
 {
     public function __construct()
@@ -162,7 +164,7 @@ class Oxipayprestashop extends PaymentModule
      */
     protected function renderForm()
     {
-        PrestaShopLogger::addLog('[oxipay-new][renderForm]start...', 1);
+        PrestaShopLogger::addLog('[oxipay][renderForm]start...', 1);
         $helper = new HelperForm();
 
         $helper->show_toolbar = false;
@@ -319,7 +321,6 @@ class Oxipayprestashop extends PaymentModule
      */
     public function hookPayment($params) //TODO: deprecated. Pre 1.6 compatibility?
     {
-        PrestaShopLogger::addLog('[oxipay-new][hookPayment]rendering payment button...', 1);
         return hookDisplayPayment();
     }
 
@@ -328,30 +329,56 @@ class Oxipayprestashop extends PaymentModule
      */
     public function hookPaymentReturn($params) //TODO: deprecated. Pre 1.6 compatibility?
     {
-        PrestaShopLogger::addLog('[oxipay-new][hookPaymentReturn]rendering payment button...', 1);
         return hookDisplayPaymentReturn();
     }
 
     public function hookDisplayPayment($params)
     {
-        PrestaShopLogger::addLog('[oxipay-new][hookDisplayPayment]rendering payment button...', 1);
-
-        $currency_id = $params['cart']->id_currency;
-        $currency = new Currency((int)$currency_id);
-
-        if (in_array($currency->iso_code, $this->limited_currencies) == false)
-            return false;
-
+        $cart = $params['cart'];
         $config_values = $this->getConfigFormValues();
 
-		$this->smarty->assign(array(
+        $this->smarty->assign(array(
             'oxipay_title' => $config_values['OXIPAY_TITLE'],
             'oxipay_logo' => $config_values['OXIPAY_LOGO'],
             'oxipay_description' => $config_values['OXIPAY_DESCRIPTION'],
-			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/'
+			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/',
+            'oxipay_validation_errors' => $this->cartValidationErrors($cart)
 		));
 
         return $this->display(__FILE__, 'views/templates/hook/payment.tpl');
+    }
+
+    /**
+     * Checks the quote for validity
+     * @throws Mage_Api_Exception
+     */
+    private function cartValidationErrors($cart)
+    {
+        $shippingAddress = new Address((int)$cart->id_address_delivery);
+        $billingAddress = new Address((int)$cart->id_address_invoice);
+        $currency = new Currency((int)$cart->id_currency);
+
+        $billingCountryIsoCode = (new Country($billingAddress->id_country))->iso_code;
+        $shippingCountryIsoCode = (new Country($shippingAddress->id_country))->iso_code;
+        $currencyIsoCode = $currency->iso_code;
+
+        PrestaShopLogger::addLog('[oxipay][cartValidationErrors]$billingCountryIsoCode:'.($billingCountryIsoCode).', $shippingCountryIsoCode:'.($shippingCountryIsoCode).',$currencyIsoCode:'.($currencyIsoCode), 1);
+
+        if($cart->getOrderTotal() < 20) {
+            return "Oxipay doesn't support purchases less than $20.";
+        }
+
+        $countryInfo = OxipayCommon::getCountryInfoFromGatewayUrl();
+
+        if($billingCountryIsoCode != $countryInfo['countryCode'] || $currencyIsoCode != $countryInfo['currencyCode']) {
+            return "Oxipay doesn't support purchases from outside ".($countryInfo['countryName']).".";
+        }
+
+        if($shippingCountryIsoCode != $countryInfo['countryCode']) {
+            return "Oxipay doesn't support purchases shipped outside ".($countryInfo['countryName']).".";
+        }
+
+        return "";
     }
 
     //TODO: is this really needed?

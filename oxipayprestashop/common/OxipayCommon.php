@@ -35,4 +35,20 @@ class OxipayCommon
         return $hash;
     }
 
+    public static function getCountryInfoFromGatewayUrl() { //TODO: it seems the admin can change the ISO codes
+        $gatewayUrl = Configuration::get('OXIPAY_GATEWAY_URL');
+        $gatewayUrlData = parse_url($gatewayUrl);
+        $host = $gatewayUrlData['host'];
+
+        if (strpos($host, '.com.au') !== false) {
+            return array('countryCode' => 'AU', 'currencyCode' => 'AUD', 'countryName' => 'Australia');
+        } else if (strpos($host, '.co.nz') !== false) {
+            return array('countryCode' => 'NZ', 'currencyCode' => 'NZD', 'countryName' => 'New Zealand');
+        } else {
+            $message = "Couldn't determine country from gateway URL: $gatewayUrl";
+            PrestaShopLogger::addLog($message, 1);
+            throw new Exception($message); 
+        }
+    }
+
 }
