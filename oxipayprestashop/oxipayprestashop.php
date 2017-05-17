@@ -164,7 +164,6 @@ class Oxipayprestashop extends PaymentModule
      */
     protected function renderForm()
     {
-        PrestaShopLogger::addLog('[oxipay][renderForm]start...', 1);
         $helper = new HelperForm();
 
         $helper->show_toolbar = false;
@@ -361,8 +360,6 @@ class Oxipayprestashop extends PaymentModule
         $billingCountryIsoCode = (new Country($billingAddress->id_country))->iso_code;
         $shippingCountryIsoCode = (new Country($shippingAddress->id_country))->iso_code;
         $currencyIsoCode = $currency->iso_code;
-
-        PrestaShopLogger::addLog('[oxipay][cartValidationErrors]$billingCountryIsoCode:'.($billingCountryIsoCode).', $shippingCountryIsoCode:'.($shippingCountryIsoCode).',$currencyIsoCode:'.($currencyIsoCode), 1);
 
         if($cart->getOrderTotal() < 20) {
             return "Oxipay doesn't support purchases less than $20.";
