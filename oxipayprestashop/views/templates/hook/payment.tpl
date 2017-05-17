@@ -26,7 +26,7 @@
 	<div class="col-xs-12">
 		<p class="payment_module" id="oxipayprestashop_payment_button">
 			{if $oxipay_validation_errors }
-				<a href="">
+				<a href="#" onclick="return false;">
 					<img src="{$this_path_ssl}images/{if $oxipay_logo}{$oxipay_logo}{else}oxipay.png{/if}" style="width: 120px;margin-right: 10px;" alt="{l s='Pay with my payment module' mod='oxipayprestashop'}" />
 					{$oxipay_validation_errors}
 				</a>
