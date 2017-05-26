@@ -114,8 +114,8 @@ class OxipayprestashopConfirmationModuleFrontController extends ModuleFrontContr
             /**
             * An error occured and is shown on a new page.
             */
-            $this->errors[] = $this->module->l('An error occured. Please contact the merchant to have more information.');
-            return $this->setTemplate('error.tpl');
+            //$this->errors[] = $this->module->l('An error occured. Please contact the merchant to have more information.'); //lost on redirection
+            Tools::redirect($this->context->link->getPageLink('order', true, NULL, "step=3"));
         }
     }
 
