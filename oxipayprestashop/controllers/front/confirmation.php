@@ -114,7 +114,9 @@ class OxipayprestashopConfirmationModuleFrontController extends ModuleFrontContr
             /**
             * An error occured and is shown on a new page.
             */
-            $this->errors[] = $this->module->l('An error occured. Please contact the merchant to have more information.');
+            $this->errors[] = $this->module->l('Payment has been declined by provider Oxipay');
+            $link = $this->context->link->getPageLink('order', true, NULL, "step=3");
+            $this->context->smarty->assign('checkout_link', $link);
             return $this->setTemplate('error.tpl');
         }
     }
