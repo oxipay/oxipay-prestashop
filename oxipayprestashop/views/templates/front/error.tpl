@@ -25,9 +25,11 @@
 
 <div>
 	<h3>{l s='An error occurred' mod='oxipayprestashop'}:</h3>
+	<br />
 	<ul class="alert alert-danger">
 		{foreach from=$errors item='error'}
 			<li>{$error|escape:'htmlall':'UTF-8'}.</li>
 		{/foreach}
 	</ul>
+	<a href="{$checkout_link}">Go back to the order checkout page</a>
 </div>
