@@ -1,5 +1,5 @@
 {*
-* 2007-2016 PrestaShop
+* 2007-2017 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -17,11 +17,13 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2016 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+*  @author    PrestaShop SA <contact@prestashop.com>
+*  @copyright 2007-2017 PrestaShop SA
+*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
+<div class="oxipaymodal">
 
 {capture name=path}
 	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}" title="{l s='Go back to the Checkout' mod='oxipayprestashop'}">{l s='Checkout' mod='oxipayprestashop'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Oxipay' mod='oxipayprestashop'}
@@ -37,14 +39,15 @@
 {if $nbProducts <= 0}
 	<p class="warning ">{l s='Your shopping cart is empty.' mod='oxipayprestashop'}</p>
 {else}
-    {*<p class="warning alert alert-error">{l s='Orders from outside Australia are not supported by Oxipay. Please select a different payment option.' mod='oxipayprestashop'}</p>*}
     {$form_query}        
     <p class="cart_navigation" id="cart_navigation">
-    	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html'}" class="button_large">{l s='Other payment methods' mod='bankwire'}</a>
+    	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html'}" class="button_large">{l s='Other payment methods' mod='oxipayprestashop'}</a>
     </p>
 {/if}
 <script type="text/javascript">
+$body = $("body");
 $(document).ready(function(){
+   $body.addClass("oxipayloading");
    $('#oxipayload').submit(); 
 });
 </script>

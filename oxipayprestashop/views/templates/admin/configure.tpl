@@ -1,5 +1,4 @@
-<?php
-/**
+{*
 * 2007-2017 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -22,14 +21,20 @@
 *  @copyright 2007-2017 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
-*/
-
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
-
-header('Location: ../');
-exit;
+*}
+{* This can be used to create a header for the config form, maybe with Oxipay logo and description *}
+{*
+<div class="panel">
+	<div class="row oxipayprestashop-header">
+		<img src="{$module_dir|escape:'html':'UTF-8'}views/img/oxipay_logo.png" class="col-xs-6 col-md-4 text-center" id="payment-logo" />
+		<div class="col-xs-6 col-md-4 text-center">
+			<h4>{l s='Online payment processing' mod='oxipayprestashop'}</h4>
+			<h4>{l s='Fast - Secure - Reliable' mod='oxipayprestashop'}</h4>
+		</div>
+		<div class="col-xs-12 col-md-4 text-center">
+			<a href="#" onclick="javascript:return false;" class="btn btn-primary" id="create-account-btn">{l s='Create an account now!' mod='oxipayprestashop'}</a><br />
+			{l s='Already have an account?' mod='oxipayprestashop'}<a href="#" onclick="javascript:return false;"> {l s='Log in' mod='oxipayprestashop'}</a>
+		</div>
+	</div>
+</div>
+*}
