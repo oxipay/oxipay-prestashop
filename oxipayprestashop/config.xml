@@ -2,7 +2,7 @@
 <module>
 	<name>oxipayprestashop</name>
 	<displayName><![CDATA[Oxipay prestashop]]></displayName>
-	<version><![CDATA[1.2.0]]></version>
+	<version><![CDATA[1.2.1]]></version>
 	<description><![CDATA[Accept payments for your products via Oxipay.]]></description>
 	<author><![CDATA[Oxipay]]></author>
 	<tab><![CDATA[payments_gateways]]></tab>
