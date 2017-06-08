@@ -36,7 +36,7 @@ class Oxipayprestashop extends PaymentModule
     {
         $this->name = 'oxipayprestashop';
         $this->tab = 'payments_gateways';
-        $this->version = '1.2.0';
+        $this->version = '1.2.1';
         $this->author = 'Oxipay';
         $this->need_instance = 0;
 
