@@ -5,7 +5,7 @@ environment:
   tag_name: "%APPVEYOR_REPO_TAG_NAME%"
   release_name: "oxipay_prestashop_v%appveyor_repo_tag_name%.zip"
 before_build:
-  - ps: (Get-Content config.xml).replace("oxipay_plugin_version_placeholder", $env:APPVEYOR_REPO_TAG_NAME ) | Set-Content config.xml
+  - ps: (Get-Content oxipayprestashop\config.xml).replace("oxipay_plugin_version_placeholder", $env:APPVEYOR_REPO_TAG_NAME ) | Set-Content oxipayprestashop\config.xml
 build_script:
   - ps: Invoke-Expression "7z a $env:release_name"
 artifacts:
