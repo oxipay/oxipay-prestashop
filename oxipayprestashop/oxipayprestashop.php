@@ -318,17 +318,17 @@ class Oxipayprestashop extends PaymentModule
      * This method is used to render the payment button,
      * Take care if the button should be displayed or not.
      */
-    public function hookPayment($params) //TODO: deprecated. Pre 1.6 compatibility?
+    public function hookPayment($params)
     {
-        return hookDisplayPayment();
+        return $this->hookDisplayPayment($params);
     }
 
     /**
      * This hook is used to display the order confirmation page.
      */
-    public function hookPaymentReturn($params) //TODO: deprecated. Pre 1.6 compatibility?
+    public function hookPaymentReturn($params)
     {
-        return hookDisplayPaymentReturn();
+        return $this->hookDisplayPaymentReturn($params);
     }
 
     public function hookDisplayPayment($params)
