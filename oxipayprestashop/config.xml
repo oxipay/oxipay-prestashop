@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
-	<name>oxipayprestashop</name>
-	<displayName><![CDATA[Oxipay prestashop]]></displayName>
-	<version><![CDATA[oxipay_plugin_version_placeholder]]></version>
-	<description><![CDATA[Accept payments for your products via Oxipay.]]></description>
-	<author><![CDATA[Oxipay]]></author>
-	<tab><![CDATA[payments_gateways]]></tab>
+    <name>oxipayprestashop</name>
+    <displayName><![CDATA[Oxipay prestashop]]></displayName>
+    <version><![CDATA[oxipay_plugin_version_placeholder]]></version>
+    <description><![CDATA[Accept payments for your products via Oxipay.]]></description>
+    <author><![CDATA[Oxipay]]></author>
+    <tab><![CDATA[payments_gateways]]></tab>
 	<confirmUninstall><![CDATA[Are you sure you want to uninstall the Oxipay module?]]></confirmUninstall>
-	<is_configurable>1</is_configurable>
-	<need_instance>1</need_instance>
+    <is_configurable>1</is_configurable>
+    <need_instance>0</need_instance>
 	<limited_countries></limited_countries>
 </module>

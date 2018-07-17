@@ -24,30 +24,23 @@
 *}
 
 <div class="oxipaymodal">
+    {capture name=path}
+        <a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}"
+           title="{l s='Go back to the Checkout' mod='oxipayprestashop'}">{l s='Checkout' mod='oxipayprestashop'}</a>
+        <span class="navigation-pipe">{$navigationPipe}</span>{l s='Oxipay' mod='oxipayprestashop'}
+    {/capture}
 
-{capture name=path}
-	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}" title="{l s='Go back to the Checkout' mod='oxipayprestashop'}">{l s='Checkout' mod='oxipayprestashop'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Oxipay' mod='oxipayprestashop'}
-{/capture}
+    {assign var='current_step' value='payment'}
 
-{include file="$tpl_dir./breadcrumb.tpl"}
-
-<h2>{l s='Order summary' mod='oxipayprestashop'}</h2>
-
-{assign var='current_step' value='payment'}
-{include file="$tpl_dir./order-steps.tpl"}
-
-{if $nbProducts <= 0}
-	<p class="warning ">{l s='Your shopping cart is empty.' mod='oxipayprestashop'}</p>
-{else}
-    {$form_query}        
-    <p class="cart_navigation" id="cart_navigation">
-    	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html'}" class="button_large">{l s='Other payment methods' mod='oxipayprestashop'}</a>
-    </p>
-{/if}
-<script type="text/javascript">
-$body = $("body");
-$(document).ready(function(){
-   $body.addClass("oxipayloading");
-   $('#oxipayload').submit(); 
-});
-</script>
+    {if $nbProducts <= 0}
+        <p class="warning ">{l s='Your shopping cart is empty.' mod='oxipayprestashop'}</p>
+    {else}
+        {$form_query nofilter}
+    {/if}
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            document.body.className += ' '+'oxipayloading';
+            document.getElementById('oxipayload').submit();
+        });
+    </script>
+</div>

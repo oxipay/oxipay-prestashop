@@ -47,7 +47,9 @@ class OxipayprestashopRedirectModuleFrontController extends ModuleFrontControlle
         $address_shipping = new Address($cart->id_address_delivery);
         $country_billing = new Country($address_shipping->id_country);
         $country_shipping = new Country($address_shipping->id_country);
-        // $customerPhone = $address_billing->$phone_mobile?$address_billing->$phone_mobile:($address_billing->$phone?$address_billing->$phone:'');
+        $state_billing = new State($address_billing->id_state);
+        $state_shipping = new State($address_shipping->id_state);
+
         $query = array(
             'x_currency' => $this->context->currency->iso_code,
             'x_url_callback' => $this->context->link->getModuleLink('oxipayprestashop','confirmation'),
@@ -62,17 +64,17 @@ class OxipayprestashopRedirectModuleFrontController extends ModuleFrontControlle
             'x_customer_first_name' => $customer->firstname,
             'x_customer_last_name' => $customer->lastname,
             'x_customer_email' => $customer->email,
-            // 'x_customer_phone' => $customerPhone,
+            'x_customer_phone' => $address_shipping->phone,
             'x_customer_billing_address1' => $address_billing->address1,
             'x_customer_billing_address2' => $address_billing->address2,
             'x_customer_billing_city' => $address_billing->city,
-            'x_customer_billing_state' => 'ACT',
+            'x_customer_billing_state' => $state_billing->name,
             'x_customer_billing_zip' => $address_billing->postcode,
             'x_customer_billing_country' => $country_billing->iso_code,
             'x_customer_shipping_address1' => $address_shipping->address1,
             'x_customer_shipping_address2'=> $address_shipping->address2,
             'x_customer_shipping_city' => $address_shipping->city,
-            'x_customer_shipping_state' => '',
+            'x_customer_shipping_state' => $state_shipping->name,
             'x_customer_shipping_zip' => $address_shipping->postcode,
             'x_customer_shipping_country' => $country_shipping->iso_code,
             'x_test' => 'false'
@@ -88,10 +90,10 @@ class OxipayprestashopRedirectModuleFrontController extends ModuleFrontControlle
 			'this_path' => $this->module->getPathUri(),
 			'this_path_bw' => $this->module->getPathUri(),
             'form_query' =>$this->generate_processing_form(Configuration::get('OXIPAY_GATEWAY_URL'), $query),
-			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->module->name.'/'
-		));
+			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->module->name.'/')
+        );
 
-        return $this->setTemplate('redirect.tpl');
+        $this->setTemplate('module:oxipayprestashop/views/templates/front/redirect.tpl');
     }
 
     protected function displayError($message, $description = false)
@@ -108,7 +110,7 @@ class OxipayprestashopRedirectModuleFrontController extends ModuleFrontControlle
          */
         array_push($this->errors, $this->module->l($message), $description);
 
-        return $this->setTemplate('error.tpl');
+        return $this->setTemplate($this->local_path.'error.tpl');
     }
 
     function generate_processing_form($checkoutUrl, $query) {

@@ -24,6 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -55,7 +57,7 @@ class Oxipayprestashop extends PaymentModule
         $this->limited_countries = array('AU', 'NZ');
         $this->limited_currencies = array('AUD', 'NZD');
 
-        $this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.6.99.99');
+        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => '1.7.99.99');
     }
 
     /**
@@ -78,10 +80,8 @@ class Oxipayprestashop extends PaymentModule
         return parent::install() &&
             $this->registerHook('header') &&
             $this->registerHook('backOfficeHeader') &&
-            $this->registerHook('payment') && //this is an alias for displayPayment ('payment' is deprecated)
-            $this->registerHook('paymentReturn') && // this is an alias for displayPaymentReturn ('paymentReturn' is deprecated)
-            $this->registerHook('displayPayment') &&
-            $this->registerHook('displayPaymentReturn');
+            $this->registerHook('paymentOptions') &&
+            $this->registerHook('paymentReturn');
     }
 
     public function uninstall()
@@ -152,7 +152,7 @@ class Oxipayprestashop extends PaymentModule
         } 
 
         $this->context->smarty->assign('module_dir', $this->_path);
-        $output = $this->context->smarty->fetch($this->local_path.'views/templates/admin/configure.tpl');
+        $output = $this->fetch($this->local_path.'views/templates/admin/configure.tpl');
 
         $html .= $output.$this->renderForm();
 
@@ -318,33 +318,69 @@ class Oxipayprestashop extends PaymentModule
      * This method is used to render the payment button,
      * Take care if the button should be displayed or not.
      */
-    public function hookPayment($params)
+    public function hookPaymentOptions($params)
     {
-        return $this->hookDisplayPayment($params);
+        if (!$this->active) {
+            return;
+        }
+        if (!$this->checkCurrency($params['cart'])) {
+            return;
+        }
+
+        if ($this->cartValidationErrors($params['cart'])) {
+            return;
+        }
+
+        $newOption = new PaymentOption();
+        $newOption->setModuleName($this->name);
+        $newOption->setCallToActionText($this->trans('Pay by Oxipay', array(), 'Modules.Oxipayprestashop.Admin'));
+        $newOption->setAction($this->context->link->getModuleLink($this->name, 'redirect', array(), true));
+        $newOption->setAdditionalInformation($this->fetch($this->local_path.'views/templates/hook/payment.tpl'));
+        $newOption->setLogo(Media::getMediaPath($this->local_path.'images/oxipay-small.png'));
+
+        return [$newOption];
     }
 
     /**
      * This hook is used to display the order confirmation page.
+     * @param $params
      */
     public function hookPaymentReturn($params)
     {
-        return $this->hookDisplayPaymentReturn($params);
+        if ($this->active == false)
+            return;
+
+        $order = $params['order'];
+
+        if ($order->getCurrentOrderState()->id != Configuration::get('PS_OS_ERROR')) {
+            $this->smarty->assign('status', 'ok');
+        }
+
+        $total = Tools::displayPrice($params['order']->getOrdersTotalPaid(), new Currency($params['order']->id_currency), false );
+        $this->smarty->assign(array(
+            'id_order' => $order->id,
+            'reference' => $order->reference,
+            'params' => $params,
+            'total' => $total,
+            'shop_name' => $this->context->shop->name
+        ));
+
+        return $this->display(__FILE__, 'views/templates/hook/confirmation.tpl');
     }
 
-    public function hookDisplayPayment($params)
+    public function checkCurrency($cart)
     {
-        $cart = $params['cart'];
-        $config_values = $this->getConfigFormValues();
+        $currency_order = new Currency((int)($cart->id_currency));
+        $currencies_module = $this->getCurrency((int)$cart->id_currency);
 
-        $this->smarty->assign(array(
-            'oxipay_title' => $config_values['OXIPAY_TITLE'],
-            'oxipay_logo' => $config_values['OXIPAY_LOGO'],
-            'oxipay_description' => $config_values['OXIPAY_DESCRIPTION'],
-			'this_path_ssl' => Tools::getShopDomainSsl(true, true).__PS_BASE_URI__.'modules/'.$this->name.'/',
-            'oxipay_validation_errors' => $this->cartValidationErrors($cart)
-		));
-
-        return $this->display(__FILE__, 'views/templates/hook/payment.tpl');
+        if (is_array($currencies_module)) {
+            foreach ($currencies_module as $currency_module) {
+                if ($currency_order->id == $currency_module['id_currency']) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -378,26 +414,6 @@ class Oxipayprestashop extends PaymentModule
         return "";
     }
 
-    //TODO: is this really needed?
-    public function hookDisplayPaymentReturn($params)
-    {
-        if ($this->active == false)
-            return;
-
-        $order = $params['objOrder'];
-
-        if ($order->getCurrentOrderState()->id != Configuration::get('PS_OS_ERROR'))
-            $this->smarty->assign('status', 'ok');
-
-        $this->smarty->assign(array(
-            'id_order' => $order->id,
-            'reference' => $order->reference,
-            'params' => $params,
-            'total' => Tools::displayPrice($params['total_to_pay'], $params['currencyObj'], false),
-        ));
-
-        return $this->display(__FILE__, 'views/templates/hook/confirmation.tpl');
-    }
 
     private function processCustomOxipayLogoUpload() {
         $logoKey = 'OXIPAY_LOGO';

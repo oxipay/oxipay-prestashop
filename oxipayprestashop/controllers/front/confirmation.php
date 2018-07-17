@@ -52,7 +52,11 @@ class OxipayprestashopConfirmationModuleFrontController extends ModuleFrontContr
         if(!$isValid) {
             PrestaShopLogger::addLog('Possible site forgery detected: invalid response signature.', 1);
             $this->errors[] = $this->module->l('An error occured with the Oxipay payment. Please contact the merchant to have more informations');
-            return $this->setTemplate('error.tpl');
+            $link = $this->context->link->getPageLink('order', true, NULL, "step=3");
+            $this->context->smarty->assign('checkout_link', $link);
+            $this->context->smarty->assign('errors', $this->errors);
+            return $this->setTemplate('module:oxipayprestashop/views/templates/front/error.tpl');
+
         }
 
         $transactionId = Tools::getValue("x_gateway_reference");
@@ -70,15 +74,17 @@ class OxipayprestashopConfirmationModuleFrontController extends ModuleFrontContr
         //order is already in 'PS_OS_PAYMENT' and we don't need to 'validateOrder' again (as this would
         //result in the 'Cart cannot be loaded or an order has already been placed using this cart' error
         //-the one from PrestaShop/classes/PaymentModule.php-).
-        $order_id = Order::getOrderByCartId((int)$cart_id);
+        $order_id = Order::getIdByCartId((int)$cart_id);
         if ($order_id) {
             $order = new Order((int)$order_id);
             if ($order && $order->getCurrentState() == $payment_status) {
                 //if the order had already been validated by the async callback from the Payment Gateway
                 //and the payment was successful...
                 //TODO: other states?
-                $this->redirectToOrderConfirmationPage($cart_id, $order_id, $secure_key);
-                return true;
+                if ($query['x_result']=='completed') {
+                    $this->redirectToOrderConfirmationPage($cart_id, $order_id, $secure_key);
+                    return true;
+                }
             }
         }
 
@@ -95,7 +101,7 @@ class OxipayprestashopConfirmationModuleFrontController extends ModuleFrontContr
             /**
             * If the order has been validated we try to retrieve it
             */
-            $order_id = Order::getOrderByCartId((int)$cart->id);
+            $order_id = Order::getIdByCartId((int)$cart->id);
 
             if ($order_id && ($secure_key == $customer->secure_key)) {
                 /**
@@ -108,7 +114,7 @@ class OxipayprestashopConfirmationModuleFrontController extends ModuleFrontContr
                 * An error occured and is shown on a new page.
                 */
                 $this->errors[] = $this->module->l('An error occured. Please contact the merchant to have more information.');
-                return $this->setTemplate('error.tpl');
+                $this->setTemplate('module:oxipayprestashop/views/templates/front/error.tpl');
             }
         } else {
             /**
@@ -117,7 +123,8 @@ class OxipayprestashopConfirmationModuleFrontController extends ModuleFrontContr
             $this->errors[] = $this->module->l('Payment has been declined by provider Oxipay');
             $link = $this->context->link->getPageLink('order', true, NULL, "step=3");
             $this->context->smarty->assign('checkout_link', $link);
-            return $this->setTemplate('error.tpl');
+            $this->context->smarty->assign('errors', $this->errors);
+            $this->setTemplate('module:oxipayprestashop/views/templates/front/error.tpl');
         }
     }
 

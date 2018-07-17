@@ -26,15 +26,15 @@
 	<div class="col-xs-12">
 		<p class="payment_module" id="oxipayprestashop_payment_button">
 			{if $oxipay_validation_errors }
-				<a href="#" onclick="return false;">
-					<img src="{$this_path_ssl}images/{if $oxipay_logo}{$oxipay_logo}{else}oxipay.png{/if}" style="width: 120px;margin-right: 10px;" alt="{l s='Pay with my payment module' mod='oxipayprestashop'}" />
-					{$oxipay_validation_errors}
-				</a>
+				{$oxipay_validation_errors}
 			{else}
-				<a href="{$link->getModuleLink('oxipayprestashop', 'redirect', array(), true)|escape:'htmlall':'UTF-8'}" title="{l s='Pay with my payment module' mod='oxipayprestashop'}">
-					<img src="{$this_path_ssl}images/{if $oxipay_logo}{$oxipay_logo}{else}oxipay.png{/if}" style="width: 120px;margin-right: 10px;" />
-					{if $oxipay_title}{$oxipay_title}{else}{l s='Oxipay' mod='oxipayprestashop'}{/if} <span>({if isset($oxipay_description) && $oxipay_description}{$oxipay_description}{else}{l s='Breathe easy with Oxipay, an interest-free installment payment plan' mod='oxipayprestashop'}{/if})</span>
-				</a>
+				<span>
+					{if isset($oxipay_description) && $oxipay_description}
+						{$oxipay_description}
+					{else}
+						{l s='Breathe easy with Oxipay, an interest-free installment payment plan' mod='oxipayprestashop'}
+					{/if}
+				</span>
 			{/if}
 		</p>
 	</div>
