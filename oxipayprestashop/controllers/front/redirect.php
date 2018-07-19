@@ -110,7 +110,8 @@ class OxipayprestashopRedirectModuleFrontController extends ModuleFrontControlle
          */
         array_push($this->errors, $this->module->l($message), $description);
 
-        return $this->setTemplate($this->local_path.'error.tpl');
+        $this->setTemplate($this->local_path.'error.tpl');
+        return;
     }
 
     function generate_processing_form($checkoutUrl, $query) {

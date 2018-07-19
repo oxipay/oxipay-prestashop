@@ -76,7 +76,7 @@ class Oxipayprestashop extends PaymentModule
         //Default values
         Configuration::updateValue('OXIPAY_TITLE', 'Oxipay');
         Configuration::updateValue('OXIPAY_DESCRIPTION', 'Breathe easy with Oxipay, an interest-free installment payment plan.');
-        
+
         return parent::install() &&
             $this->registerHook('header') &&
             $this->registerHook('backOfficeHeader') &&
@@ -145,11 +145,11 @@ class Oxipayprestashop extends PaymentModule
             } else {
 				foreach ($postErrors as $err) {
 					$html .= $this->displayError($err);
-                } 
+                }
             }
         } else {
 			$html .= '<br />';
-        } 
+        }
 
         $this->context->smarty->assign('module_dir', $this->_path);
         $output = $this->fetch($this->local_path.'views/templates/admin/configure.tpl');
@@ -273,8 +273,6 @@ class Oxipayprestashop extends PaymentModule
      */
     protected function postProcess()
     {
-        $form_values = $this->getConfigFormValues();
-
         //custom logo image upload processing (if necessary)
         //OXIPAY_LOGO config property is updated here
         $this->processCustomOxipayLogoUpload();
@@ -317,18 +315,21 @@ class Oxipayprestashop extends PaymentModule
     /**
      * This method is used to render the payment button,
      * Take care if the button should be displayed or not.
+     * @param $params
+     * @return mixed
+     * @throws Exception
      */
     public function hookPaymentOptions($params)
     {
         if (!$this->active) {
-            return;
+            return false;
         }
         if (!$this->checkCurrency($params['cart'])) {
-            return;
+            return false;
         }
 
         if ($this->cartValidationErrors($params['cart'])) {
-            return;
+            return false;
         }
 
         $newOption = new PaymentOption();
@@ -344,11 +345,13 @@ class Oxipayprestashop extends PaymentModule
     /**
      * This hook is used to display the order confirmation page.
      * @param $params
+     * @return bool
      */
     public function hookPaymentReturn($params)
     {
-        if ($this->active == false)
-            return;
+        if ($this->active == false) {
+            return false;
+        }
 
         $order = $params['order'];
 
@@ -385,7 +388,9 @@ class Oxipayprestashop extends PaymentModule
 
     /**
      * Checks the quote for validity
-     * @throws Mage_Api_Exception
+     * @param $cart
+     * @return string
+     * @throws Exception
      */
     private function cartValidationErrors($cart)
     {
@@ -401,8 +406,11 @@ class Oxipayprestashop extends PaymentModule
             return "Oxipay doesn't support purchases less than $20.";
         }
 
-        $countryInfo = OxipayCommon::getCountryInfoFromGatewayUrl();
-
+        try {
+            $countryInfo = OxipayCommon::getCountryInfoFromGatewayUrl();
+        }catch(Exception $exception){
+            return $exception->getMessage();
+        }
         if($billingCountryIsoCode != $countryInfo['countryCode'] || $currencyIsoCode != $countryInfo['currencyCode']) {
             return "Oxipay doesn't support purchases from outside ".($countryInfo['countryName']).".";
         }
