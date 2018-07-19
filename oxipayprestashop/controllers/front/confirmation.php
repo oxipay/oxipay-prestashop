@@ -68,23 +68,24 @@ class OxipayprestashopConfirmationModuleFrontController extends ModuleFrontContr
         $payment_status = Configuration::get('PS_OS_PAYMENT'); // Default value for a payment that succeed.
 
         //We are not using a second script to be used by the Payment Gateway to issue the async callback
-        //to notificate us to validate the order remotely (i.e. validation.php). We are using this 
+        //to notify us to validate the order remotely (i.e. validation.php). We are using this
         //confirmation.php script for both uses (user browser redirection validation and remote async 
         //callback validation). For this reason, if the async callback has been already issued, this
         //order is already in 'PS_OS_PAYMENT' and we don't need to 'validateOrder' again (as this would
         //result in the 'Cart cannot be loaded or an order has already been placed using this cart' error
         //-the one from PrestaShop/classes/PaymentModule.php-).
+        /**
+         * If the order has been validated we try to retrieve it
+         */
         $order_id = Order::getIdByCartId((int)$cart_id);
-        if ($order_id) {
+        if ($order_id && $query['x_result']=='completed') {
             $order = new Order((int)$order_id);
             if ($order && $order->getCurrentState() == $payment_status) {
                 //if the order had already been validated by the async callback from the Payment Gateway
                 //and the payment was successful...
-                //TODO: other states?
-                if ($query['x_result']=='completed') {
-                    $this->redirectToOrderConfirmationPage($cart_id, $order_id, $secure_key);
-                    return true;
-                }
+                //Because only successful transactions generate orders
+                $this->redirectToOrderConfirmationPage($cart_id, $order_id, $secure_key);
+                return true;
             }
         }
 
@@ -109,12 +110,14 @@ class OxipayprestashopConfirmationModuleFrontController extends ModuleFrontContr
                 */
 
                 $this->redirectToOrderConfirmationPage($cart_id, $order_id, $secure_key);
+                return true;
             } else {
                 /**
                 * An error occured and is shown on a new page.
                 */
                 $this->errors[] = $this->module->l('An error occured. Please contact the merchant to have more information.');
                 $this->setTemplate('module:oxipayprestashop/views/templates/front/error.tpl');
+                return false;
             }
         } else {
             /**
@@ -125,6 +128,7 @@ class OxipayprestashopConfirmationModuleFrontController extends ModuleFrontContr
             $this->context->smarty->assign('checkout_link', $link);
             $this->context->smarty->assign('errors', $this->errors);
             $this->setTemplate('module:oxipayprestashop/views/templates/front/error.tpl');
+            return false;
         }
     }
 
